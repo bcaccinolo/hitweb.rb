@@ -11,7 +11,7 @@ class Link
   property :id,         Serial
   property :created_at, DateTime
 
-  property :title,       String
+  property :title,       String, :length => 100
   property :url,         String
   property :description, Text
 
@@ -24,7 +24,7 @@ class Category
   property :id,         Serial
   property :created_at, DateTime
 
-  property :title,       String
+  property :title,       String, :length => 100
   property :description, Text
   property :keywords,    String
 

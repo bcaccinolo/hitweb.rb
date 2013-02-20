@@ -1,10 +1,10 @@
 <?php 
 
-DEFINE('INSERT_CATEGORY', false); 
+DEFINE('INSERT_CATEGORY', true); 
 DEFINE('INSERT_CATEGORY_PARENT_LINKS', false); 
 
 DEFINE('INSERT_LINKS', false); 
-DEFINE('UPDATE_LINKS', true); 
+DEFINE('UPDATE_LINKS', false); 
 
 // mysql connection
 $dmoz = mysql_connect(':/tmp/mysql.sock', 'root', '');
@@ -14,7 +14,6 @@ if (!$dmoz) {
 echo 'Connected successfully';
 echo "\n";
 
-// extract data from dmoz
 if(INSERT_CATEGORY) {
   $db_selected = mysql_select_db('dmoz', $dmoz);
   if (!$db_selected) {
@@ -37,23 +36,27 @@ if(INSERT_CATEGORY) {
 
   // insert data in the hitweb
   while ($row = mysql_fetch_assoc($result)) {
-    echo $row['catid'];
-    echo ', ';
-    echo $row['name'];
-    echo ', ';
-    echo $row['title'];
-    echo ', ';
-    echo $row['description'];
+    // echo $row['catid'];
+    // echo ', ';
+    // echo $row['name'];
+    // echo ', ';
+    // echo $row['title'];
+    // echo ', ';
+    // echo $row['description'];
+    echo "\n";
     echo "\n";
 
-    $query = "insert into hitweb_CATEGORIES VALUES(".$row['catid'].", '".mysql_escape_string($row['name'])."', 0, '".mysql_escape_string($row['title'])."', '".mysql_escape_string( $row['description'] )."','')";
+    $query  = "insert into categories (id, created_at, title, description) VALUES(";
+    $query .= $row['catid'].", ";
+    $query .= "NOW(), ";
+    $query .= "'".mysql_escape_string($row['name'])."', ";
+    $query .= "'".mysql_escape_string( $row['description'] )."');";
     echo $query;
     echo "\n";
     $insert_result = mysql_query($query); //, $db_selected);
     if (!$insert_result) {
       die('Invalid query: ' . mysql_error());
     }
-
   }
 }
 

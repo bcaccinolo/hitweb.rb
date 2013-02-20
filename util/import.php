@@ -1,7 +1,7 @@
 <?php 
 
-DEFINE('INSERT_CATEGORY', true); 
-DEFINE('INSERT_CATEGORY_PARENT_LINKS', false); 
+DEFINE('INSERT_CATEGORY', false); 
+DEFINE('INSERT_CATEGORY_PARENT_LINKS', true); 
 
 DEFINE('INSERT_LINKS', false); 
 DEFINE('UPDATE_LINKS', false); 
@@ -69,7 +69,7 @@ if (INSERT_CATEGORY_PARENT_LINKS) {
   }
 
   // get the categorie name list
-  $query = "select `hitweb_CATEGORIES`.`CATEGORIES_NAME` as name from `hitweb_CATEGORIES`;";
+  $query = "select `categories`.`title` as name from `categories` where `parent_id` = 0;";
   echo $query;
   echo "\n";
   $result = mysql_query($query); 
@@ -79,7 +79,7 @@ if (INSERT_CATEGORY_PARENT_LINKS) {
 
   echo "\n";
   while ($row = mysql_fetch_assoc($result)) {
-    // echo $row['name'];
+    // echo $row['title'];
     // echo "\n";
     
     // calculation of the parent name
@@ -93,7 +93,7 @@ if (INSERT_CATEGORY_PARENT_LINKS) {
     //		}
 
     // getting the parent id from the name
-    $query = "select `hitweb_CATEGORIES`.`CATEGORIES_ID` as catid from `hitweb_CATEGORIES` where `hitweb_CATEGORIES`.`CATEGORIES_NAME`='".mysql_escape_string($r)."';";
+    $query = "select `categories`.`id` as catid from `categories` where `categories`.`title`='".mysql_escape_string($r)."';";
     // echo $query;
     // echo "\n";
     $catids = mysql_query($query); 
@@ -104,7 +104,7 @@ if (INSERT_CATEGORY_PARENT_LINKS) {
 
     // update the category entry with the parent id
     if($parentid){
-      $query = "update `hitweb_CATEGORIES` set `hitweb_CATEGORIES`.`CATEGORIES_PARENTS` = ".$parentid." where `hitweb_CATEGORIES`.`CATEGORIES_NAME` = '".mysql_escape_string($row['name'])."';";
+      $query = "update `categories` set `categories`.`parent_id` = ".$parentid." where `categories`.`title` = '".mysql_escape_string($row['name'])."';";
       echo $query;
       echo "\n";
       $res = mysql_query($query); //, $db_selected);

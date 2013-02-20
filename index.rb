@@ -2,6 +2,8 @@
 require 'sinatra'
 require 'data_mapper'
 
+require 'pry'
+
 DataMapper::Logger.new($stdout, :debug)
 DataMapper.setup(:default, 'mysql://root:@localhost/hitweb')
 
@@ -28,7 +30,7 @@ class Category
   property :description, Text
   property :keywords,    String
 
-  has 1, :parent, 'Category'
+  has n, :children,  :child_key => [ :parent_id ], :model => 'Category'
   belongs_to :parent, :model => 'Category'
 
   has n, :links
@@ -37,6 +39,10 @@ end
 DataMapper.finalize.auto_upgrade!
 
 get '/' do
-  "Hello World!"
+  haml :index, :locals => {:top => Category.first}
+end
+
+get '/category/:id' do
+  haml :index, :locals => { :top => Category.get(params[:id]) }
 end
 

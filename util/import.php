@@ -1,10 +1,10 @@
 <?php 
 
 DEFINE('INSERT_CATEGORY', false); 
-DEFINE('INSERT_CATEGORY_PARENT_LINKS', true); 
+DEFINE('INSERT_CATEGORY_PARENT_LINKS', false); 
 
 DEFINE('INSERT_LINKS', false); 
-DEFINE('UPDATE_LINKS', false); 
+DEFINE('UPDATE_LINKS', true); 
 
 // mysql connection
 $dmoz = mysql_connect(':/tmp/mysql.sock', 'root', '');
@@ -147,7 +147,7 @@ if (INSERT_LINKS) {
     // echo $row['catid'];
 
     // checking the category id exists on hitweb
-    $query = "select count(*) as num from `hitweb_CATEGORIES` where `hitweb_CATEGORIES`.`CATEGORIES_ID` = ".$row['catid'].";";
+    $query = "select count(*) as num from `categories` where `categories`.`id` = ".$row['catid'].";";
     // echo $query;
     // echo "\n";
     $count = mysql_query($query); //, $db_selected);
@@ -162,23 +162,22 @@ if (INSERT_LINKS) {
     if($numCat > 0) {
 
       // insertion of the link if the category is present in hitweb
-      $query = "insert into `hitweb_LIENS` (`LIENS_URL`) values ('".  mysql_escape_string($row['resource']) ."');"; 
+      $query = "insert into `links` (`url`, `created_at`, `category_id`) values ('".  mysql_escape_string($row['resource']) ."', NOW(),  ".  $row['catid'] .");"; 
       echo $query;
       echo "\n";
       $res_insert = mysql_query($query);
       if (!$res_insert) {
         die('Invalid query: ' . mysql_error());
       }
-      $insert_id = mysql_insert_id();
-
+      // $insert_id = mysql_insert_id();
       // linking the category and the link
-      $query = "insert into `hitweb_CATEGORIES_LIENS` (`hitweb_CATEGORIES_LIENS`.`CATEGORIES_LIENS_LIENS_ID`, `hitweb_CATEGORIES_LIENS`.`CATEGORIES_LIENS_CATEGORIES_ID`) values (".$insert_id.", ".$row['catid']." ); "; 
-      echo $query;
-      echo "\n";
-      $res_insert = mysql_query($query);
-      if (!$res_insert) {
-        die('Invalid query: ' . mysql_error());
-      }
+      // $query = "insert into `categories_LIENS` (`categories_LIENS`.`CATEGORIES_LIENS_LIENS_ID`, `categories_LIENS`.`CATEGORIES_LIENS_CATEGORIES_ID`) values (".$insert_id.", ".$row['catid']." ); "; 
+      // echo $query;
+      // echo "\n";
+      // $res_insert = mysql_query($query);
+      // if (!$res_insert) {
+      //   die('Invalid query: ' . mysql_error());
+      // }
     }
   }
 }
@@ -192,7 +191,7 @@ if(UPDATE_LINKS){
   }
  
   // getting data links from hitweb
-  $query = " SELECT * FROM `hitweb_LIENS` WHERE `hitweb_LIENS`.`LIENS_DESCRIPTION` IS NULL; "; // limit 20;";
+  $query = " SELECT * FROM `links` WHERE `links`.`description` IS NULL; "; // limit 20;";
   echo $query;
   echo "\n";
   $result = mysql_query($query);
@@ -202,7 +201,7 @@ if(UPDATE_LINKS){
 
   while ($row = mysql_fetch_assoc($result)) {
 
-    echo $row['LIENS_URL'];
+    echo $row['url'];
     echo "\n";
 
     $db_selected = mysql_select_db('dmoz', $dmoz);
@@ -210,7 +209,7 @@ if(UPDATE_LINKS){
       die ('Can\'t use hitweb : ' . mysql_error());
     }
     $query = "select * from content_description where externalpage = '".
-              mysql_escape_string($row['LIENS_URL'])."';";
+              mysql_escape_string($row['url'])."';";
     echo $query;
     echo "\n";
     $res_dmoz = mysql_query($query); //, $db_selected);
@@ -227,13 +226,11 @@ if(UPDATE_LINKS){
     echo $link_data['title'];
     echo "\n";
 
-    $query = "update `hitweb_LIENS` set `LIENS_DESCRIPTION` = '".
+    $query = "update `links` set `description` = '".
               mysql_escape_string($link_data['description']) ."', ".
-              "`LIENS_NAME`= '".
-              mysql_escape_string($link_data['title']) ."', ".
-              "`LIENS_TITLE`= '".
+              "`title`= '".
               mysql_escape_string($link_data['title']) ."' ".
-              " where `LIENS_ID`=". $row['LIENS_ID']  ." ; ";
+              " where `id`=". $row['id']  ." ; ";
     
     echo $query;
     echo "\n";
@@ -241,7 +238,6 @@ if(UPDATE_LINKS){
     if (!$r) {
       die('Invalid query: ' . mysql_error());
     }
-
   }
 }
 

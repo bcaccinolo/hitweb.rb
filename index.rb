@@ -39,7 +39,7 @@ end
 DataMapper.finalize.auto_upgrade!
 
 get '/' do
-  haml :index, :locals => {:top => Category.first}
+  haml :index, :locals => {:top => Category.first}, :layout => true
 end
 
 get '/category/:id' do

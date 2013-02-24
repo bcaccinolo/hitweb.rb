@@ -27,7 +27,7 @@ class Category
   property :id,         Serial
   property :created_at, DateTime
 
-  property :title,       String, :length => 100
+  property :title,       String, :length => 300
   property :description, Text
   property :keywords,    String
 
@@ -36,73 +36,72 @@ class Category
 
   has n, :links
 
-  def self.clean
+  def url
 
-  s = "Top/World/Français"
-  puts s
-  t = s.downcase
-  puts t
-
-  replacements = []
-  replacements << [/ /, '-']
-  replacements << [/\//, '-']
-
-  replacements << [/[çç]/, 'c']
-  replacements << [/ãåäàâá/, 'a']
-  replacements << [/[éè]/, 'e']
-
-  replacements << [/[a-z]/, '']
-
-  replacements.each do |r|
-    t = t.gsub(r[0], r[1])
-  end
-
-  puts t
-    
-  end
-  
-  def create_url 
-    
     s = self.title
-    
-    
-    c = "Top/World/Français"
-    puts s
     t = s.downcase
 
-    puts t
-
     replacements = []
-    replacements << [/ãåäàâá/, 'a']
-    replacements << [/[éè]/, 'e']
-    replacements << [/Öôöó/, 'o']
-    replacements << [/ìÎíîï/, 'i']
-    replacements << [/üûùÜ/, 'u']
-    replacements << [/ÿ/, 'y']
-    replacements << [/Çç/, 'c']
-    replacements << [/ñ/, 'n']
-    replacements << [/ø/, 'o']
-    replacements << [/Œ/, 'o']
-    replacements << [/ş/, 's']
-    replacements << [/ /, '-']
-    replacements << [/\//, '-']
+    
+    # special chars
+    replacements << [/[°]/, ''] 
+    replacements << [/[\/_\-,'&\.\ ́’\+ ]/, '-']
+
+    #special letters
+    replacements << [/[ççÇ]/, 'c']
+    replacements << [/[ãåäàâá]/, 'a']
+    replacements << [/[Ééèêë]/, 'e']
+    replacements << [/[œôÖöóø]/, 'o']
+    replacements << [/[Îîïíì]/, 'i']
+    replacements << [/[Üüûù]/, 'u']
+    replacements << [/[ÿ]/, 'y']
+    replacements << [/[şŠ]/, 's']
+    replacements << [/[ñ]/, 'n']
+
+    replacements << [/--/, '-'] # 2 '-' > 1 '-'
+    
+    # replacements << [/[a-z0-9]/, '']
 
     replacements.each do |r|
       t = t.gsub(r[0], r[1])
     end
-
-    puts t
-    t
+  
+    return t
   end
+    
 end
 
-DataMapper.finalize.auto_upgrade!
+# DataMapper.finalize.auto_upgrade!
 
 get '/' do
+  require 'pry';binding.pry ;
   haml :index, :locals => {:top => Category.first}, :layout => true
 end
 
 get '/category/:id' do
   haml :index, :locals => { :top => Category.get(params[:id]) }
 end
+
+
+cs = Category.all
+count = 0
+cs.each do |c|
+  t = c.url
+  puts t 
+  # if t.size > 0
+  #   puts c.title
+  #   puts "  #{t}"
+  #   puts "####################"
+  #   count += 1
+  # end
+  # if count > 10
+  #   break
+  # end
+end
+
+exit
+
+
+
+
 

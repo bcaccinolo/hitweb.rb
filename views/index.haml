@@ -7,6 +7,7 @@
 - bread.reverse.each do |c|
   %a{:href => "/category/#{c.id}"}
     = c.title
+    = c.create_url
   = " ## "
 
 

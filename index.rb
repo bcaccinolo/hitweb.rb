@@ -37,7 +37,8 @@ class Category
   has n, :links
   
   def title_simplification
-    puts self.title.gsub(/Top\/World\/Français\//,'')
+    self.title = self.title.gsub(/Top\/World\/Français\//,'')
+    self.save
   end
 
   def url
@@ -90,8 +91,10 @@ end
 cs = Category.all
 count = 0
 cs.each do |c|
-  puts c
+  puts c.title
   puts c.title_simplification
+  puts c.title
+  puts '########'
   # t = c.url
   # puts t 
   # if t.size > 0

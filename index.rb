@@ -35,6 +35,10 @@ class Category
   belongs_to :parent, :model => 'Category'
 
   has n, :links
+  
+  def title_simplification
+    puts self.title.gsub(/Top\/World\/Français\//,'')
+  end
 
   def url
 
@@ -86,8 +90,10 @@ end
 cs = Category.all
 count = 0
 cs.each do |c|
-  t = c.url
-  puts t 
+  puts c
+  puts c.title_simplification
+  # t = c.url
+  # puts t 
   # if t.size > 0
   #   puts c.title
   #   puts "  #{t}"

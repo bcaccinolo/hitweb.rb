@@ -28,6 +28,7 @@ class Category
   property :created_at, DateTime
 
   property :title,       String, :length => 300
+  property :url,       String, :length => 300  
   property :description, Text
   property :keywords,    String
 
@@ -41,7 +42,7 @@ class Category
     self.save
   end
 
-  def url
+  def generate_url
 
     s = self.title
     t = s.downcase
@@ -71,12 +72,15 @@ class Category
       t = t.gsub(r[0], r[1])
     end
   
+    self.url = t
+    self.save
+  
     return t
   end
     
 end
 
-# DataMapper.finalize.auto_upgrade!
+DataMapper.finalize.auto_upgrade!
 
 get '/' do
   require 'pry';binding.pry ;
@@ -88,13 +92,13 @@ get '/category/:id' do
 end
 
 
-cs = Category.all
-count = 0
-cs.each do |c|
-  puts c.title
-  puts c.title_simplification
-  puts c.title
-  puts '########'
+# cs = Category.all
+# count = 0
+# cs.each do |c|
+#   puts c.title
+#   puts c.title_simplification
+#   puts c.title
+#   puts '########'
   # t = c.url
   # puts t 
   # if t.size > 0
@@ -106,9 +110,8 @@ cs.each do |c|
   # if count > 10
   #   break
   # end
-end
-
-exit
+# end
+# exit
 
 
 

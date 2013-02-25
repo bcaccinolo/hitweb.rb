@@ -80,43 +80,18 @@ class Category
     
 end
 
-DataMapper.finalize.auto_upgrade!
+# DataMapper.finalize.auto_upgrade!
 
 get '/' do
   haml :index, :locals => {:top => Category.first}, :layout => true
 end
 
-get '/category/:id' do
-  haml :index, :locals => { :top => Category.get(params[:id]) }
+get '/:cat_url' do
+  puts 'ici dans ca url'
+  res = Category.all(url:params['cat_url'])
+  if res.size >= 1
+    r = res.first
+    haml :index, :locals => { :top => r }
+  end
 end
-
-
-# cs = Category.all
-# count = 0
-# cs.each do |c|
-#   puts c.title
-#   puts c.generate_url
-#   puts c.url
-# end
-# exit
-
-#   puts c.title
-#   puts '########'
-  # t = c.url
-  # puts t 
-  # if t.size > 0
-  #   puts c.title
-  #   puts "  #{t}"
-  #   puts "####################"
-  #   count += 1
-  # end
-  # if count > 10
-  #   break
-  # end
-# end
-# exit
-
-
-
-
 

@@ -80,7 +80,7 @@ class Category
     
 end
 
-# DataMapper.finalize.auto_upgrade!
+DataMapper.finalize.auto_upgrade!
 
 get '/' do
   require 'pry';binding.pry ;
@@ -92,14 +92,14 @@ get '/category/:id' do
 end
 
 
-cs = Category.all
-count = 0
-cs.each do |c|
-  puts c.title
-  puts c.generate_url
-  puts c.url
-end
-exit
+# cs = Category.all
+# count = 0
+# cs.each do |c|
+#   puts c.title
+#   puts c.generate_url
+#   puts c.url
+# end
+# exit
 
 #   puts c.title
 #   puts '########'

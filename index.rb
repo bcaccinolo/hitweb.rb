@@ -83,7 +83,6 @@ end
 DataMapper.finalize.auto_upgrade!
 
 get '/' do
-  require 'pry';binding.pry ;
   haml :index, :locals => {:top => Category.first}, :layout => true
 end
 

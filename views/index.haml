@@ -37,8 +37,8 @@
       %h2 Links
     %ul
       - top.links.each do |link|
-        %li
-          %a{ :href => link.url }
-            %h3= link.title.empty? ? link.url : link.title
-          %p= link.description
+        %li{ itemscope:'', itemtype:"http://schema.org/ItemList" }
+          %a{ itemprop:"url", :href => link.url }
+            %h3{itemprop:"name"}= link.title.empty? ? link.url : link.title
+          %p{itemprop:"description"}= link.description
 

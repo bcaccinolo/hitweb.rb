@@ -1,10 +1,13 @@
 <?php 
 
+// mysqldump --add-drop-database --add-drop-table -uroot hitweb > hitweb.sql
+// tar czvf hitweb.sql.tgz hitweb.sql
+
 DEFINE('INSERT_CATEGORY', false); 
-DEFINE('INSERT_CATEGORY_PARENT_LINKS', false); 
+DEFINE('INSERT_CATEGORY_PARENT_LINKS', true); 
 
 DEFINE('INSERT_LINKS', false); 
-DEFINE('UPDATE_LINKS', true); 
+DEFINE('UPDATE_LINKS', false); 
 
 // mysql connection
 $dmoz = mysql_connect(':/tmp/mysql.sock', 'root', '');

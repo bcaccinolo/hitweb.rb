@@ -87,8 +87,13 @@ get '/' do
   haml :index, :locals => {:top => Category.first}, :layout => true
 end
 
-get '/category/:id' do
-  haml :index, :locals => { :top => Category.get(params[:id]) }
+get '/:cat_url' do
+  puts 'ici dans ca url'
+  res = Category.all(url:params['cat_url'])
+  if res.size >= 1
+    r = res.first
+    haml :index, :locals => { :top => r }
+  end
 end
 
 

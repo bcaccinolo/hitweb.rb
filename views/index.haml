@@ -1,26 +1,44 @@
-
 - c = top
 - bread = []
-- while !c.nil? do #.parent_id != 0 do
+- while !c.nil? do 
   - bread << c
   - c = c.parent
-- bread.reverse.each do |c|
-  %a{:href => "/category/#{c.id}"}
-    = c.title
-    = c.create_url
-  = " ## "
 
+%header
+  %nav
+    %ul
+      - bread.reverse.each do |c|
+        %li
+          - url = c.parent_id.nil? ? '/' : "/#{c.url}"
+          %a{:href => url }
+            = c.title
+          = " ## "
 
-%h2 Sub categories
-%ul
-- top.children.each do |category|
-  %li
-    %a{:href => "/category/#{category.id}"}
-      = category.title
+%section
+  %article
+    %header
+      %h1= top.title
+    %p
+      = top.description
 
-%h2 Links
-%ul
-- top.links.each do |link|
-  %li
-    %a{ :href => link.url }
-      = link.title.empty? ? link.url : link.title
+%section
+  %article
+    %header
+      %h2 Sub categories
+    %ul
+      - top.children.each do |category|
+        %li
+          %a{:href => "/#{category.url}"}
+            %h3= category.title
+
+%section
+  %article
+    %header
+      %h2 Links
+    %ul
+      - top.links.each do |link|
+        %li
+          %a{ :href => link.url }
+            %h3= link.title.empty? ? link.url : link.title
+          %p= link.description
+

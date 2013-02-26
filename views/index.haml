@@ -27,9 +27,9 @@
       %h2 Sub categories
     %ul
       - top.children.each do |category|
-        %li
-          %a{:href => "/#{category.url}"}
-            %h3= category.title
+        %li{itemscope:'', itemtype:"http://schema.org/SiteNavigationElement"}
+          %a{itemprop:'url', href:"/#{category.url}"}
+            %h3{itemprop:'name'}= category.title
 
 %section
   %article
@@ -37,8 +37,8 @@
       %h2 Links
     %ul
       - top.links.each do |link|
-        %li{ itemscope:'', itemtype:"http://schema.org/ItemList" }
-          %a{ itemprop:"url", :href => link.url }
+        %li{itemscope:'', itemtype:"http://schema.org/ItemList"}
+          %a{itemprop:"url", :href => link.url}
             %h3{itemprop:"name"}= link.title.empty? ? link.url : link.title
           %p{itemprop:"description"}= link.description
 

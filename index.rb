@@ -3,8 +3,6 @@
 require 'sinatra'
 require 'data_mapper'
 
-require 'pry'
-
 DataMapper::Logger.new($stdout, :debug)
 DataMapper.setup(:default, 'mysql://root:@localhost/hitweb')
 
@@ -83,12 +81,14 @@ end
 # DataMapper.finalize.auto_upgrade!
 
 get '/' do
-  require 'pry';binding.pry ;
   haml :index, :locals => {:top => Category.first}, :layout => true
 end
 
+get '/sitemap.xml' do
+  builder :sitemap
+end
+
 get '/:cat_url' do
-  puts 'ici dans ca url'
   res = Category.all(url:params['cat_url'])
   if res.size >= 1
     r = res.first
@@ -97,32 +97,12 @@ get '/:cat_url' do
 end
 
 
-cs = Category.all
-count = 0
-cs.each do |c|
-  puts c.title
-  puts c.generate_url
-  puts c.url
-end
-exit
-
+# cs = Category.all
+# count = 0
+# cs.each do |c|
 #   puts c.title
-#   puts '########'
-  # t = c.url
-  # puts t 
-  # if t.size > 0
-  #   puts c.title
-  #   puts "  #{t}"
-  #   puts "####################"
-  #   count += 1
-  # end
-  # if count > 10
-  #   break
-  # end
+#   puts c.generate_url
+#   puts c.url
 # end
 # exit
-
-
-
-
 

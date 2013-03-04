@@ -2,6 +2,7 @@
 
 require 'sinatra'
 require 'data_mapper'
+require 'cgi'
 
 DataMapper::Logger.new($stdout, :debug)
 DataMapper.setup(:default, 'mysql://root:@localhost/hitweb')

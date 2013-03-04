@@ -14,12 +14,13 @@
             = c.title
           = " ## "
 
+
 %section
   %article
     %header
       %h1= top.title
     %p
-      = top.description
+      = CGI.unescapeHTML top.description
 
 %section
   %article

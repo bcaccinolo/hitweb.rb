@@ -84,6 +84,15 @@ get '/' do
   haml :index, :locals => {:top => Category.first}, :layout => true
 end
 
+# to handle '/index.php?categories_parents_id=:cat_id' 
+get '/index.php' do
+  res = Category.all(id:params['categories_parents_id'])
+  if res.size >= 1
+    r = res.first
+    haml :index, :locals => { :top => r }
+  end
+end
+
 get '/sitemap.xml' do
   builder :sitemap
 end
@@ -95,14 +104,4 @@ get '/:cat_url' do
     haml :index, :locals => { :top => r }
   end
 end
-
-
-# cs = Category.all
-# count = 0
-# cs.each do |c|
-#   puts c.title
-#   puts c.generate_url
-#   puts c.url
-# end
-# exit
 

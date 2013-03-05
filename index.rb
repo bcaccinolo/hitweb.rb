@@ -3,6 +3,7 @@
 require 'sinatra'
 require 'data_mapper'
 require 'cgi'
+# require 'pry'
 
 DataMapper::Logger.new($stdout, :debug)
 DataMapper.setup(:default, 'mysql://root:@localhost/hitweb')
@@ -82,8 +83,17 @@ end
 # DataMapper.finalize.auto_upgrade!
 
 get '/' do
-  haml :index, :locals => {:top => Category.first}, :layout => true
+  unless params['categories_parents_id'].nil?
+    res = Category.all(id:params['categories_parents_id'])
+    if res.size >= 1
+      r = res.first
+      haml :index, :locals => { :top => r }
+    end
+  else
+    haml :index, :locals => {:top => Category.first}, :layout => true
+  end
 end
+
 
 # to handle '/index.php?categories_parents_id=:cat_id' 
 get '/index.php' do

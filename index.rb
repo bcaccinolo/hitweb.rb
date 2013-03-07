@@ -28,7 +28,7 @@ class Category
   property :created_at, DateTime
 
   property :title,       String, :length => 300
-  property :url,       String, :length => 300  
+  property :url,       String, :length => 300
   property :description, Text
   property :keywords,    String
 
@@ -36,7 +36,7 @@ class Category
   belongs_to :parent, :model => 'Category'
 
   has n, :links
-  
+
   def title_simplification
     self.title = self.title.gsub(/Top\/World\/Français\//,'')
     self.save
@@ -48,9 +48,9 @@ class Category
     t = s.downcase
 
     replacements = []
-    
+
     # special chars
-    replacements << [/[°]/, ''] 
+    replacements << [/[°]/, '']
     replacements << [/[\/_\-,'&\.\ ́’\+ ]/, '-']
 
     #special letters
@@ -65,19 +65,19 @@ class Category
     replacements << [/[ñ]/, 'n']
 
     replacements << [/--/, '-'] # 2 '-' > 1 '-'
-    
+
     # replacements << [/[a-z0-9]/, '']
 
     replacements.each do |r|
       t = t.gsub(r[0], r[1])
     end
-  
+
     self.url = t
     self.save
-  
+
     return t
   end
-    
+
 end
 
 # DataMapper.finalize.auto_upgrade!
@@ -95,13 +95,17 @@ get '/' do
 end
 
 
-# to handle '/index.php?categories_parents_id=:cat_id' 
+# to handle '/index.php?categories_parents_id=:cat_id'
 get '/index.php' do
   res = Category.all(id:params['categories_parents_id'])
   if res.size >= 1
     r = res.first
     haml :index, :locals => { :top => r }
   end
+end
+
+get '/category/:id' do
+  haml :index, :locals => { :top => Category.get(params[:id]) }
 end
 
 get '/sitemap.xml' do
